@@ -23,12 +23,16 @@ module Xweather
       # Makes a GET request to the Xweather API, automatically including client credentials.
       # Optionally uses caching if enabled in configuration and Rails cache is present.
       #
+      # Credentials passed explicitly (client_id:/client_secret:) take precedence, so a
+      # single process can talk to the API on behalf of several subscriptions. When they
+      # are omitted, the globally configured credentials are used as the default.
+      #
       # @param args [Array] Arguments passed to Faraday's get method (typically the path).
       # @param kwargs [Hash] Keyword arguments for Faraday's get method (query parameters, etc).
       # @return [Faraday::Response, Object] The API response, or cached data if available.
       def get(*args, **kwargs)
-        kwargs[:client_id] = Xweather.configuration.client_id
-        kwargs[:client_secret] = Xweather.configuration.client_secret
+        kwargs[:client_id] ||= Xweather.configuration.client_id
+        kwargs[:client_secret] ||= Xweather.configuration.client_secret
 
         if use_cache?
           key = cache_key(*args, **kwargs)
