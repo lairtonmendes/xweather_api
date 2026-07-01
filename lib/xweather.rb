@@ -4,6 +4,8 @@ require_relative "xweather/version"
 require_relative "xweather/configuration"
 require_relative "xweather/lightning_flash"
 require_relative "xweather/lightning"
+require_relative "xweather/lightning_analytics"
+require_relative "xweather/lightning_threats"
 require_relative "xweather/client"
 
 module Xweather
