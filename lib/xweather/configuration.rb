@@ -38,6 +38,16 @@ module Xweather
     # @return [Integer]
     attr_accessor :cache_expires_in
 
+    # Extra Faraday middlewares inserted into the connection, in order, before the
+    # adapter. Each entry is the argument list for Faraday::Connection#use, so both
+    # a class and a class plus options work:
+    #
+    #   config.middlewares = [MyLogger, [MyTracer, level: :debug]]
+    #
+    # Useful for logging, tracing or instrumenting every request the client makes.
+    # @return [Array]
+    attr_accessor :middlewares
+
     # Initializes the configuration with default values.
     #
     # @return [Xweather::Configuration]
@@ -48,6 +58,7 @@ module Xweather
       @faraday_adapter = Faraday.default_adapter
       @cache = false
       @cache_expires_in = 600
+      @middlewares = []
     end
   end
 end

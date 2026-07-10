@@ -21,5 +21,6 @@ module Xweather
 
   def self.configure
     yield(configuration)
+    Client.reset_connection!
   end
 end

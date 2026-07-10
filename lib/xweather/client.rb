@@ -16,8 +16,17 @@ module Xweather
         @connection ||= Faraday.new do |conn|
           conn.url_prefix = Xweather.configuration.endpoint
           conn.request :json
+          # Before the adapter, so they see both the outgoing request and the response.
+          Xweather.configuration.middlewares.each { |middleware| conn.use(*Array(middleware)) }
           conn.adapter Xweather.configuration.faraday_adapter
         end
+      end
+
+      # Drops the memoized connection so the next request rebuilds it from the
+      # current configuration. Needed when endpoint/adapter/middlewares change
+      # after the client has already been used (reconfiguration, tests).
+      def reset_connection!
+        @connection = nil
       end
 
       # Makes a GET request to the Xweather API, automatically including client credentials.
